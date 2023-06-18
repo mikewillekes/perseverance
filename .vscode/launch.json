@@ -5,23 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Streamlit App",
+            "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "module": "streamlit",
-            "justMyCode": true,
-            "args": ["run", "${file}"],
+            "program": "${file}",
+            "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH": "${workspaceRoot}/src"
             }
         },
         {
-            "name": "Python: Current File",
+            "name": "Python: Streamlit App",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
+            "module": "streamlit",
+            "justMyCode": true,
+            "args": ["run", "${file}"],
             "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH": "${workspaceRoot}/src"

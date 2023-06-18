@@ -1,6 +1,17 @@
 {
     "python.formatting.provider": "black",
     "cSpell.ignoreWords": [
-        "openai"
+        "IMPRESSIONCLINIQUE",
+        "INFORMATIONSGÉNÉRALES",
+        "MANIFESTATIONSCLINIQUES",
+        "Médical",
+        "fillna",
+        "iterrows",
+        "openai",
+        "pydatetime",
+        "serde"
+    ],
+    "cSpell.words": [
+        "dataframe"
     ]
 }
