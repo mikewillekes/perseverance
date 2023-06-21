@@ -4,9 +4,6 @@ import string
 import re
 import unicodedata
 
-from thefuzz import fuzz
-from thefuzz import process
-
 from config import config
 from config import columns
 from dossier import Dossier, save_dossiers
