@@ -7,13 +7,22 @@ from typing import List
 @deserialize
 @serialize
 @dataclass
+class GPTCleanedDiagnosis:
+    raw_field_diagnosis_french: str
+    clean_field_diagnosis_french: str
+
+
+@deserialize
+@serialize
+@dataclass
 class Dossier:
     id: str
     date: datetime
     raw_symptoms: str
-    raw_diagnosis: str
+    raw_diagnoses: str
     symptoms: List[str]
-    diagnosis: List[str]
+    diagnoses: List[str]
+    gpt_cleaned_diagnoses: List[GPTCleanedDiagnosis]
 
 
 def load_dossiers(filename):
@@ -33,3 +42,20 @@ def save_dossiers(filename, dossiers):
     # Save to Jsonl file
     open(filename, 'w').writelines(lines)
 
+
+def load_gpt_cleaned_diagnoses(filename):
+    # Deserialized from Jsonl file
+    diagnoses = []
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            diagnoses.append(from_json(GPTCleanedDiagnosis, line.strip()))
+    return diagnoses
+
+
+def save_gpt_cleaned_diagnoses(filename, diagnoses):
+    # Serialize to json string & append newline
+    lines = []
+    for m in diagnoses:
+        lines.append(to_json(m) + '\n')
+    # Save to Jsonl file
+    open(filename, 'a').writelines(lines)

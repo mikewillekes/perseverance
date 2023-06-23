@@ -75,15 +75,16 @@ for index, row in df.iterrows():
                 id=row[columns.ID_COL],
                 date=row[columns.DATE_COL].to_pydatetime(),
                 raw_symptoms=row[columns.SYMPTOMS_COL],
-                raw_diagnosis=row[columns.DIAGNOSIS_COL],
+                raw_diagnoses=row[columns.DIAGNOSIS_COL],
                 symptoms=normalize_symptoms(row[columns.SYMPTOMS_COL]),
-                diagnosis=normalize_diagnosis(row[columns.DIAGNOSIS_COL])
+                diagnoses=normalize_diagnosis(row[columns.DIAGNOSIS_COL]),
+                gpt_cleaned_diagnoses=[]
                 ))
 
 save_dossiers('data/dossiers.jsonl', dossiers)
 
-unique_diagnosis = list(set([d for dossier in dossiers for d in dossier.diagnosis]))
-unique_diagnosis.sort()
-for d in unique_diagnosis:
+unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
+unique_diagnoses.sort()
+for d in unique_diagnoses:
     print(d)
-print(len(unique_diagnosis))
+print(len(unique_diagnoses))
