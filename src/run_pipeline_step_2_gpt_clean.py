@@ -1,5 +1,4 @@
 import os
-import openai
 import json
 import re
 from collections import defaultdict
@@ -15,6 +14,9 @@ llm = OpenAI(model_name='text-davinci-003',
              max_tokens=2000,
              openai_api_key=os.getenv("OPENAI_API_KEY"))
 
+
+from langchain.embeddings import OpenAIEmbeddings
+embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 #
 # Print out some summary stats about the previous pipeline stages
@@ -34,7 +36,6 @@ def build_prompt(diagnoses):
 
         values = '\n'.join(['\t' + d for d in diagnoses])
         return content.replace('%%DIAGNOSIS%%' , values)
-
 
 #
 # Iterate through the diagnosis list in chunks, using OpenAI to clean
@@ -70,6 +71,9 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
 
     for item in json.loads(completion):
         diagnosis = from_json(GPTCleanedDiagnosis, json.dumps(item))
+
+        # Embed the Cleaned Diagnosis
+        diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_french)
         gpt_cleaned_diagnoses.append(diagnosis)
         
     save_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE, gpt_cleaned_diagnoses)

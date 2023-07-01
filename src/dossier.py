@@ -14,7 +14,8 @@ class GPTCleanedDiagnosis:
     is_probable: bool
     to_investigate: bool
     to_eliminate: bool
-    
+    embeddings: List[float]
+
 
 @deserialize
 @serialize
@@ -49,11 +50,9 @@ def save_dossiers(filename, dossiers):
 
 def load_gpt_cleaned_diagnoses(filename):
     # Deserialized from Jsonl file
-    diagnoses = []
     with open(filename, 'r') as fp:
         for line in fp.readlines():
-            diagnoses.append(from_json(GPTCleanedDiagnosis, line.strip()))
-    return diagnoses
+            yield from_json(GPTCleanedDiagnosis, line.strip())
 
 
 def save_gpt_cleaned_diagnoses(filename, diagnoses):

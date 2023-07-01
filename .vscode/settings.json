@@ -5,6 +5,7 @@
         "INFORMATIONSGÉNÉRALES",
         "MANIFESTATIONSCLINIQUES",
         "Médical",
+        "TSNE",
         "fillna",
         "iterrows",
         "openai",

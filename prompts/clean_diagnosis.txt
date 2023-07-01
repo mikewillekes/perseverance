@@ -21,7 +21,7 @@ Probable
 
 To Eliminate
 ------------
-- If you see a diagnosis that indicates a condition need to be "eliminated", remove this qualification from the diagnosis and set the flag "to_eliminate": true
+- If you see a diagnosis that indicates a condition need to be "eliminated", remove this qualification from clean_field_diagnosis_french and set the flag "to_eliminate": true
 - For example:
     "anemie moderee a eliminer" -->  {"clean_field_diagnosis_french": "anémie modérée", "to_eliminate": true} 
     "cardipathie a eliminer" -->  {"clean_field_diagnosis_french": "cardiopathie", "to_eliminate": true}
@@ -30,7 +30,7 @@ To Eliminate
 
 To Investigate
 --------------
-- If you see a diagnosis that indicates a condition need to be "investigated" or "etiology to be investigated", remove this qualification from the diagnosis and set the flag "to_investigate": true
+- If you see a diagnosis that indicates a condition need to be "investigated" (ie. a investiguer, a investigue, a invest, a investiguee) or "etiology to be investigated" (ie. d estiologie a investigue, d etiologie a investiguer), remove this extra qualification from clean_field_diagnosis_french and set the flag "to_investigate": true
 - For example:
     "anemie d etiologie a investiguer" -->  {"clean_field_diagnosis_french": "anémie", "to_investigate": true} 
     "pneumophalie a invest" -->  {"clean_field_diagnosis_french": "pneumopathie", "to_investigate": true}
@@ -52,7 +52,8 @@ Return the answer as JSON in the following format:
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,
-        "to_eliminate": Boolean
+        "to_eliminate": Boolean,
+        "embeddings" : []
     },
   {
         "raw_field_diagnosis_french": "the second Field Diagnosis value in French",
@@ -60,7 +61,8 @@ Return the answer as JSON in the following format:
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,
-        "to_eliminate": Boolean
+        "to_eliminate": Boolean,
+        "embeddings" : []
     }
 ]
 No preamble. Just return JSON.
