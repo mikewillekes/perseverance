@@ -9,9 +9,13 @@
         "iterrows",
         "openai",
         "pydatetime",
-        "serde"
+        "serde",
+        "textdavinci"
     ],
     "cSpell.words": [
-        "dataframe"
+        "dataframe",
+        "langchain",
+        "llms",
+        "templating"
     ]
 }
