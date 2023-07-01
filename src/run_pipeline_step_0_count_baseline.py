@@ -8,6 +8,11 @@ from config import config
 from config import columns
 from dossier import Dossier, save_dossiers
 
+
+#
+# Count the number of unique diagnoses in the source data.
+#
+
 # Load .xlsx into the dataframe
 raw_df = pd.read_excel(config.DATA_FILE)
 
@@ -27,25 +32,10 @@ def normalize_diagnosis(raw_diagnosis):
     # by a newline. Gather all values into a new list
     diagnosis = raw_diagnosis.split('\n')
 
-    # replace all punctuation with whitespace
-    diagnosis = [''.join(char if char not in string.punctuation else ' ' for char in value) for value in diagnosis]
-
-    # strip leading and trailing whitespace
-    diagnosis = [value.strip() for value in diagnosis]
-
-    # lowercase
+    # Only "Clean up" we do here is lowercase.
     diagnosis = [value.lower() for value in diagnosis]
 
-    # remove empty records
-    diagnosis = [value for value in diagnosis if value]
-
-    # normalize whitespace
-    diagnosis = [' '.join(value.split()) for value in diagnosis]
-
-    # fold unicode to ascii
-    diagnosis = [''.join(char for char in unicodedata.normalize('NFD', value) if unicodedata.category(char) != 'Mn') for value in diagnosis]
-
-    # sort
+      # sort
     diagnosis.sort()
 
     return diagnosis
@@ -72,10 +62,9 @@ for index, row in df.iterrows():
                 gpt_cleaned_diagnoses=[]
                 ))
 
-save_dossiers('data/dossiers.jsonl', dossiers)
-
 unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
 unique_diagnoses.sort()
+
 for d in unique_diagnoses:
     print(d)
 print(len(unique_diagnoses))
