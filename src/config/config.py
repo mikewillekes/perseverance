@@ -10,6 +10,5 @@ ICD_ENTITIES_FILE_EMBEDDING = 'data/icd_entities_with_embeddings.jsonl'
 
 # Working / intermediate files
 DOSSIERS_FILE = 'data/dossiers.jsonl'
-CLUSTERS_FILE = 'data/clusters.txt'
 GPT_CLEANED_DIAGNOSES_FILE = 'data/gpt_cleaned_diagnoses.jsonl'
 

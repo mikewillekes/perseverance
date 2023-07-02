@@ -16,11 +16,19 @@ class ICDEntity:
     embeddings: List[float]
 
 
-def load_icd_entities(filename):
+def load_icd_entities_generator(filename):
     # Deserialized from Jsonl file
     with open(filename, 'r') as fp:
         for line in fp.readlines():
             yield from_json(ICDEntity, line.strip())
+
+def load_icd_entities_batch(filename):
+    # Deserialized from Jsonl file
+    entities = []
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            entities.append(from_json(ICDEntity, line.strip()))
+    return entities
 
 def save_icd_entities(filename, entities):
     # Serialize to json string & append newline
@@ -28,7 +36,7 @@ def save_icd_entities(filename, entities):
     for e in entities:
         lines.append(to_json(e) + '\n')
     # Save to Jsonl file
-    open(filename, 'w').writelines(lines)
+    open(filename, 'a').writelines(lines)
 
 def save_icd_entity(filename, entity):
     # Serialize to json string & append newline
