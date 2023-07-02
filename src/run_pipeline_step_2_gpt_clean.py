@@ -21,7 +21,7 @@ embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
 #
 # Print out some summary stats about the previous pipeline stages
 #
-dossiers = load_dossiers('data/dossiers.jsonl')
+dossiers = load_dossiers(config.DOSSIERS_FILE)
 print(f'Dossiers: {len(dossiers)}')
 
 unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
@@ -63,7 +63,8 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
     #            "shorthand": "",
     #            "is_probable": false,
     #            "to_investigate": false,
-    #            "to_eliminate": false
+    #            "to_eliminate": false,
+    #            "embeddings": []
     #        },
     # ]
     # 
@@ -72,8 +73,10 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
     for item in json.loads(completion):
         diagnosis = from_json(GPTCleanedDiagnosis, json.dumps(item))
 
-        # Embed the Cleaned Diagnosis
-        diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_french)
+        # Embed the Cleaned Diagnosis (guard against an empty cleaned string)
+        if (diagnosis.clean_field_diagnosis_french):
+            diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_french)
+
         gpt_cleaned_diagnoses.append(diagnosis)
         
     save_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE, gpt_cleaned_diagnoses)

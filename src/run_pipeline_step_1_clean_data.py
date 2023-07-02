@@ -72,7 +72,7 @@ for index, row in df.iterrows():
                 gpt_cleaned_diagnoses=[]
                 ))
 
-save_dossiers('data/dossiers.jsonl', dossiers)
+save_dossiers(config.DOSSIERS_FILE, dossiers)
 
 unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
 unique_diagnoses.sort()
