@@ -49,6 +49,7 @@ Return the answer as JSON in the following format:
     {
         "raw_field_diagnosis_french": "the first Field Diagnosis value in French",
         "clean_field_diagnosis_french": "the first corrected value in French",
+        "clean_field_diagnosis_english":"the English translation of clean_field_diagnosis_french",
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,
@@ -58,6 +59,7 @@ Return the answer as JSON in the following format:
   {
         "raw_field_diagnosis_french": "the second Field Diagnosis value in French",
         "clean_field_diagnosis_french": "the second corrected value in French",
+        "clean_field_diagnosis_english":"the English translation of clean_field_diagnosis_french",
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,

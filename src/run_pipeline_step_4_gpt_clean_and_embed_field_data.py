@@ -41,7 +41,7 @@ def build_prompt(diagnoses):
 # Iterate through the diagnosis list in chunks, using OpenAI to clean
 # and normalize each diagnosis
 #
-CHUNK_SIZE = 10
+CHUNK_SIZE = 25
 for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
 
     chunk = unique_diagnoses[i:i+CHUNK_SIZE]
@@ -73,9 +73,9 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
     for item in json.loads(completion):
         diagnosis = from_json(GPTCleanedDiagnosis, json.dumps(item))
 
-        # Embed the Cleaned Diagnosis (guard against an empty cleaned string)
-        if (diagnosis.clean_field_diagnosis_french):
-            diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_french)
+        # Embed the English Cleaned Diagnosis (guard against an empty cleaned string)
+        if (diagnosis.clean_field_diagnosis_english):
+            diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_english)
 
         gpt_cleaned_diagnoses.append(diagnosis)
         

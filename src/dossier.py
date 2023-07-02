@@ -10,6 +10,7 @@ from typing import List
 class GPTCleanedDiagnosis:
     raw_field_diagnosis_french: str
     clean_field_diagnosis_french: str
+    clean_field_diagnosis_english: str
     shorthand: str
     is_probable: bool
     to_investigate: bool

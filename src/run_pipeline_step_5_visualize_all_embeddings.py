@@ -1,20 +1,29 @@
 from config import config
-from icd import load_icd_entities_generator, ICDEntity
+from dossier import load_gpt_cleaned_diagnoses
+from icd import load_icd_entities_generator
 
 import pandas as pd
 import numpy as np
 from sklearn.manifold import TSNE
 import plotly.express as px
 
-
 titles = []
 embeddings = []
 series = []
 hover = []
 
+# First - Collect embeddings for Field Diagnoses
+for diagnosis in load_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE):
+    if diagnosis.embeddings:
+        titles.append(diagnosis.clean_field_diagnosis_english)
+        embeddings.append(diagnosis.embeddings)
+        series.append('Perseverance')
+        hover.append(diagnosis.clean_field_diagnosis_french)
+
+# Next - Collect all ICD-11 Embeddings
 for entity in load_icd_entities_generator(config.ICD_ENTITIES_FILE_EMBEDDING):
     if entity.grouping_depth == 1:
-        titles.append(entity.code)
+        titles.append('')
         embeddings.append(entity.embeddings)
         series.append(f'ICD {entity.code[0]}')
         hover.append(f'{entity.code}: {entity.title}')
