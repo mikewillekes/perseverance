@@ -41,7 +41,7 @@ def build_prompt(diagnoses):
 # Iterate through the diagnosis list in chunks, using OpenAI to clean
 # and normalize each diagnosis
 #
-CHUNK_SIZE = 25
+CHUNK_SIZE = 10
 for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
 
     chunk = unique_diagnoses[i:i+CHUNK_SIZE]
