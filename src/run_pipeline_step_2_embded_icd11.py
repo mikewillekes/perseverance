@@ -6,7 +6,7 @@ from config import config
 from icd import ICDEntity, load_icd_entities_batch, save_icd_entity
 
 from langchain.embeddings import OpenAIEmbeddings
-embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
+embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"), model='text-embedding-ada-002')
 
 #
 # Print out some summary stats about the previous pipeline stages
@@ -18,7 +18,8 @@ CHUNK_SIZE = 250
 for i in range(0, len(entities), CHUNK_SIZE):
 
     chunk = entities[i:i+CHUNK_SIZE]
-    texts = [c.title for c in chunk]
+    texts = [f'{c.title}' for c in chunk]
+    
     print(f'Chunk [{i+1}..{i+CHUNK_SIZE}]: {", ".join([c.code for c in chunk])}')
 
     # Embed

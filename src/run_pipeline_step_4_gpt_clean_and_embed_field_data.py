@@ -9,14 +9,14 @@ from dossier import Dossier, load_dossiers, GPTCleanedDiagnosis, save_gpt_cleane
 from serde.json import from_json
 
 from langchain.llms import OpenAI
-llm = OpenAI(model_name='text-davinci-003',
+llm = OpenAI(model_name='gpt-4',
              temperature=0.3,
-             max_tokens=2000,
+             max_tokens=2500,
              openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 
 from langchain.embeddings import OpenAIEmbeddings
-embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
+embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"), model='text-embedding-ada-002')
 
 #
 # Print out some summary stats about the previous pipeline stages
@@ -51,10 +51,6 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
     # Call the LLM to complete the prompt
     completion = llm(prompt)
 
-    # # remove the substring "Answer: " from the bigger response string
-    # answer = response['choices'][0]['text']
-    # gpt_cleaned_chunk = re.sub(r'^\s*Answer:\s*', '', answer)
-
     # Result will be something like this
     # [
     #        {
@@ -80,22 +76,3 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
         gpt_cleaned_diagnoses.append(diagnosis)
         
     save_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE, gpt_cleaned_diagnoses)
-
-
-# map_of_gpt_cleaned_diagnoses = defaultdict(dict)
-
-# # Collect into a map-of-lists so it's easier to match-up with the original dossiers
-# for item in json.loads(gpt_cleaned_chunk):
-#     key = item['raw_field_diagnosis_french']
-#     map_of_gpt_cleaned_diagnoses[key] = item
-
-# for key, value in map_of_gpt_cleaned_diagnoses.items():
-#     print('==============================')
-#     print(f'Key: {key}')
-#     for item in value:
-#         print(item)
-
-# unique_gpt_cleaned_diagnoses = list(set([d['clean_field_diagnosis_french'] for d in map_of_gpt_cleaned_diagnoses.values()]))
-# unique_gpt_cleaned_diagnoses.sort()
-
-# print(f'Unique Diagnoses: {len(unique_gpt_cleaned_diagnoses)}')
