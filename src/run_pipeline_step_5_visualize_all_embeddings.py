@@ -1,5 +1,5 @@
 from config import config
-from dossier import load_gpt_cleaned_diagnoses
+from dossier import load_diagnosis_embeddings_batch
 from icd import load_icd_entities_generator
 
 import pandas as pd
@@ -13,12 +13,12 @@ series = []
 hover = []
 
 # First - Collect embeddings for Field Diagnoses
-for diagnosis in load_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE):
-    if diagnosis.embeddings:
+for diagnosis in load_diagnosis_embeddings_batch(config.DIAGNOSIS_EMBEDDINGS_FILE):
+    if diagnosis.embedding:
         titles.append(diagnosis.clean_field_diagnosis_english)
-        embeddings.append(diagnosis.embeddings)
+        embeddings.append(diagnosis.embedding)
         series.append('Perseverance')
-        hover.append(diagnosis.clean_field_diagnosis_french)
+        hover.append('')
 
 # Next - Collect all ICD-11 Embeddings
 for entity in load_icd_entities_generator(config.ICD_ENTITIES_FILE_EMBEDDING):

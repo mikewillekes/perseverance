@@ -13,7 +13,6 @@ raw_df = pd.read_excel(config.DATA_FILE)
 
 # filter to only the columns we care about
 df = raw_df[[columns.ID_COL, 
-             columns.DATE_COL,
              columns.SYMPTOMS_COL,
              columns.DIAGNOSIS_COL]].copy()
 
@@ -64,7 +63,6 @@ for index, row in df.iterrows():
     dossiers.append(
             Dossier(
                 id=row[columns.ID_COL],
-                date=row[columns.DATE_COL].to_pydatetime(),
                 raw_symptoms=row[columns.SYMPTOMS_COL],
                 raw_diagnoses=row[columns.DIAGNOSIS_COL],
                 symptoms=normalize_symptoms(row[columns.SYMPTOMS_COL]),

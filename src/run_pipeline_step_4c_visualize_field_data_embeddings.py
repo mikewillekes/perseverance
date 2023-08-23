@@ -1,5 +1,5 @@
 from config import config
-from dossier import load_gpt_cleaned_diagnoses
+from dossier import load_diagnosis_embeddings_batch
 
 import pandas as pd
 import numpy as np
@@ -10,9 +10,9 @@ import plotly.express as px
 titles = []
 embeddings = []
 
-for diagnosis in load_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE):
-    titles.append(diagnosis.clean_field_diagnosis_french)
-    embeddings.append(diagnosis.embeddings)
+for diagnosis in load_diagnosis_embeddings_batch(config.DIAGNOSIS_EMBEDDINGS_FILE):
+    titles.append(diagnosis.clean_field_diagnosis_english)
+    embeddings.append(diagnosis.embedding)
 
 tsne = TSNE(n_components=2, random_state=42)
 embeddings_tsne = tsne.fit_transform(np.array(embeddings))

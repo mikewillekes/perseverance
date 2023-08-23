@@ -2,6 +2,7 @@ import os
 import json
 import re
 from collections import defaultdict
+import time
 
 from config import config
 from config import columns
@@ -28,7 +29,6 @@ unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnose
 unique_diagnoses.sort()
 print(f'Unique Diagnoses: {len(unique_diagnoses)}')
 
-
 def build_prompt(diagnoses):
      # Very naive templating using %%SOME_STRING%% 
     with open('prompts/clean_diagnosis.txt', 'r') as fin:
@@ -44,6 +44,7 @@ def build_prompt(diagnoses):
 CHUNK_SIZE = 10
 for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
 
+    time.sleep(0.5)
     chunk = unique_diagnoses[i:i+CHUNK_SIZE]
     prompt = build_prompt(chunk)
     print(f'Chunk [{i+1}..{i+CHUNK_SIZE}]: {", ".join(chunk)}')
@@ -59,8 +60,7 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
     #            "shorthand": "",
     #            "is_probable": false,
     #            "to_investigate": false,
-    #            "to_eliminate": false,
-    #            "embeddings": []
+    #            "to_eliminate": false
     #        },
     # ]
     # 
@@ -68,11 +68,6 @@ for i in range(0, len(unique_diagnoses), CHUNK_SIZE):
 
     for item in json.loads(completion):
         diagnosis = from_json(GPTCleanedDiagnosis, json.dumps(item))
-
-        # Embed the English Cleaned Diagnosis (guard against an empty cleaned string)
-        if (diagnosis.clean_field_diagnosis_english):
-            diagnosis.embeddings = embed.embed_query(diagnosis.clean_field_diagnosis_english)
-
         gpt_cleaned_diagnoses.append(diagnosis)
-        
+
     save_gpt_cleaned_diagnoses(config.GPT_CLEANED_DIAGNOSES_FILE, gpt_cleaned_diagnoses)

@@ -53,8 +53,7 @@ Return the answer as JSON in the following format:
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,
-        "to_eliminate": Boolean,
-        "embeddings" : []
+        "to_eliminate": Boolean
     },
   {
         "raw_field_diagnosis_french": "the second Field Diagnosis value in French",
@@ -63,8 +62,7 @@ Return the answer as JSON in the following format:
         "shorthand": "a comma separated list of terms from clean_field_diagnosis_french that are likely French medical shorthand or acronyms",
         "is_probable": Boolean,
         "to_investigate": Boolean,
-        "to_eliminate": Boolean,
-        "embeddings" : []
+        "to_eliminate": Boolean
     }
 ]
 No preamble. Just return JSON.

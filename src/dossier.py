@@ -15,7 +15,14 @@ class GPTCleanedDiagnosis:
     is_probable: bool
     to_investigate: bool
     to_eliminate: bool
-    embeddings: List[float]
+
+
+@deserialize
+@serialize
+@dataclass
+class DiagnosisEmbedding:
+    clean_field_diagnosis_english: str
+    embedding: List[float]
 
 
 @deserialize
@@ -23,7 +30,6 @@ class GPTCleanedDiagnosis:
 @dataclass
 class Dossier:
     id: str
-    date: datetime
     raw_symptoms: str
     raw_diagnoses: str
     symptoms: List[str]
@@ -61,5 +67,21 @@ def save_gpt_cleaned_diagnoses(filename, diagnoses):
     lines = []
     for m in diagnoses:
         lines.append(to_json(m) + '\n')
+    # Save to Jsonl file
+    open(filename, 'a').writelines(lines)
+
+
+def load_diagnosis_embeddings_batch(filename):
+    # Deserialized from Jsonl file
+    embeddings = []
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            embeddings.append(from_json(DiagnosisEmbedding, line.strip()))
+    return embeddings
+
+
+def save_diagnosis_embedding(filename, embedding):
+    # Serialize to json string & append newline
+    lines = [to_json(embedding) + '\n']
     # Save to Jsonl file
     open(filename, 'a').writelines(lines)
