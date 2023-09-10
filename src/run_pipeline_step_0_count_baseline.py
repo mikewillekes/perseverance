@@ -19,12 +19,13 @@ raw_df = pd.read_excel(config.DATA_FILE)
 # filter to only the columns we care about
 df = raw_df[[columns.ID_COL, 
              columns.SYMPTOMS_COL,
-             columns.DIAGNOSIS_COL]].copy()
+             columns.DIAGNOSIS_COL,
+             columns.PRESCRIPTION_COL]].copy()
 
 # fill in NaNs with empty strings
 df[columns.SYMPTOMS_COL].fillna('', inplace=True)
 df[columns.DIAGNOSIS_COL].fillna('', inplace=True)
-
+df[columns.PRESCRIPTION_COL].fillna('', inplace=True)
 
 def normalize_diagnosis(raw_diagnosis):
     # the input column may contain multiple entries separated
@@ -46,6 +47,15 @@ def normalize_symptoms(raw_symptoms):
     symptoms = raw_symptoms.split('\n')
     return symptoms
 
+# For fun, count the raw number of unique diagnosis fields with now cleaning
+raw_diagnosis_values = set()
+for index, row in df.iterrows():
+    raw_diagnosis_values.add(row[columns.DIAGNOSIS_COL])
+
+raw_prescription_values = set()
+for index, row in df.iterrows():
+    raw_prescription_values.add(row[columns.PRESCRIPTION_COL])
+
 
 dossiers = []
 
@@ -66,4 +76,9 @@ unique_diagnoses.sort()
 
 for d in unique_diagnoses:
     print(d)
-print(len(unique_diagnoses))
+
+
+print(f'Raw Diagnoses: {len(raw_diagnosis_values)}')
+print(f'Unique Diagnoses: {len(unique_diagnoses)}')
+
+print(f'Raw Prescriptions: {len(raw_prescription_values)}')
