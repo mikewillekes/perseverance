@@ -31,10 +31,13 @@ class DiagnosisEmbedding:
 class Dossier:
     id: str
     raw_symptoms: str
-    raw_diagnoses: str
-    symptoms: List[str]
-    diagnoses: List[str]
-    gpt_cleaned_diagnoses: List[GPTCleanedDiagnosis]
+    raw_diagnosis: str
+    raw_prescription: str
+    manual_diagnosis_overrides: List[str]
+    clean_symptoms: List[str]
+    clean_diagnosis: List[str]
+    clean_prescription: List[str]
+    gpt_cleaned_diagnosis: List[GPTCleanedDiagnosis]
 
 
 def load_dossiers(filename):

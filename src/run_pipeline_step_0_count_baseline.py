@@ -6,7 +6,7 @@ import unicodedata
 
 from config import config
 from config import columns
-from dossier import Dossier, save_dossiers
+from dossier import Dossier
 
 
 #
@@ -35,9 +35,6 @@ def normalize_diagnosis(raw_diagnosis):
     # Only "Clean up" we do here is lowercase.
     diagnosis = [value.lower() for value in diagnosis]
 
-      # sort
-    diagnosis.sort()
-
     return diagnosis
 
 
@@ -46,6 +43,14 @@ def normalize_symptoms(raw_symptoms):
     # by a newline. Gather all values into a new list
     symptoms = raw_symptoms.split('\n')
     return symptoms
+
+
+def normalize_prescription(raw_prescription):
+    # the input column may contain multiple entries separated
+    # by a newline. Gather all values into a new list
+    prescription = raw_prescription.split('\n')
+    return prescription
+
 
 # For fun, count the raw number of unique diagnosis fields with now cleaning
 raw_diagnosis_values = set()
@@ -61,24 +66,26 @@ dossiers = []
 
 for index, row in df.iterrows():
 
-    dossiers.append(
-            Dossier(
+    dossier = Dossier(
                 id=row[columns.ID_COL],
                 raw_symptoms=row[columns.SYMPTOMS_COL],
-                raw_diagnoses=row[columns.DIAGNOSIS_COL],
-                symptoms=normalize_symptoms(row[columns.SYMPTOMS_COL]),
-                diagnoses=normalize_diagnosis(row[columns.DIAGNOSIS_COL]),
-                gpt_cleaned_diagnoses=[]
-                ))
+                raw_diagnosis=row[columns.DIAGNOSIS_COL],
+                raw_prescription=row[columns.PRESCRIPTION_COL],
+                manual_diagnosis_overrides=[],
+                clean_symptoms=normalize_symptoms(row[columns.SYMPTOMS_COL]),
+                clean_diagnosis=normalize_diagnosis(row[columns.DIAGNOSIS_COL]),
+                clean_prescription=normalize_prescription(row[columns.PRESCRIPTION_COL]),
+                gpt_cleaned_diagnosis=[])
 
-unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
-unique_diagnoses.sort()
+    dossiers.append(dossier)
 
-for d in unique_diagnoses:
+unique_diagnosis = list(set([d for dossier in dossiers for d in dossier.clean_diagnosis]))
+unique_diagnosis.sort()
+
+for d in unique_diagnosis:
     print(d)
 
-
+print(f'Total records {len(dossiers)}')
 print(f'Raw Diagnoses: {len(raw_diagnosis_values)}')
-print(f'Unique Diagnoses: {len(unique_diagnoses)}')
-
+print(f'Unique Diagnoses: {len(unique_diagnosis)}')
 print(f'Raw Prescriptions: {len(raw_prescription_values)}')
