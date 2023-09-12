@@ -1,5 +1,6 @@
-You are a French-speaking medical doctor reviewing notes from a community clinic held in a rural community in a resource poor country following an earthquake.  Following a field diagnosis, some patients were given medication. The clinician recorded the medication and dosage details in French. Here is a collection of prescription values:
+You are a French-speaking medical doctor reviewing notes from a community clinic held in a rural community in a resource poor country following an earthquake.  Following a field diagnosis, some patients were given medication. The clinician recorded the medication and dosage details in French. Here is a collection of prescription values in CSV format:
 
+"patient_id", "raw_prescription"
 %%PRESCRIPTION%%
 
 For each input prescription:
@@ -9,11 +10,14 @@ For each input prescription:
 Return the answer as JSON in the following format:
 [
     {
+        "patient_id": "the first patient_id",
         "raw_prescription": "the first input prescription value in French",
         "medication": "first corrected medication name in French"
     },
     {
+        "patient_id": "the second patient_id",
         "raw_prescription": "the second input prescription value in French",
         "medication": "second corrected medication name in French"
     }
 ]
+No preamble. Just return JSON.

@@ -6,12 +6,12 @@ import time
 
 from config import config
 from config import columns
-from dossier import Dossier, load_dossiers, save_gpt_cleaned_prescriptions
+from dossier import Dossier, load_dossiers, GPTCleanedPrescription, save_gpt_cleaned_prescriptions
 from serde.json import from_json
 
 from langchain.llms import OpenAI
 llm = OpenAI(model_name='gpt-3.5-turbo',
-             temperature=1.0,
+             temperature=0.3,
              max_tokens=3000,
              openai_api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -30,14 +30,19 @@ def build_prompt(dossiers):
     with open('prompts/clean_prescription.txt', 'r') as fin:
         content = fin.read()
 
-        values = '\n'.join([str(d.clean_prescription) for d in dossiers])
-        return content.replace('%%PRESCRIPTION%%' , values)
+        values = []
+        for dossier in dossiers:
+            id = dossier.id
+            for prescription in dossier.clean_prescription:
+                values.append(f'"{id}", "{prescription}"')
+        
+        return content.replace('%%PRESCRIPTION%%', '\n'.join(values))
 
 #
 # Iterate through the diagnosis list in chunks, using OpenAI to clean
 # and normalize each diagnosis
 #
-CHUNK_SIZE = 1
+CHUNK_SIZE = 10
 for i in range(0, len(dossiers), CHUNK_SIZE):
 
     time.sleep(0.05)
@@ -49,25 +54,33 @@ for i in range(0, len(dossiers), CHUNK_SIZE):
     completion = llm(prompt)
 
     # Result will be something like this
-    #   {"prescription": ["Lisinopril", "Amlodipine", "Omeprazole", "Amoxicilline", "Metronidazole"]}
-    #   {"prescription": ["Paracetamol", "B complex"]}
-    #   {"prescription": ["Amoxicilline", "Paracetamol"]}
-    #   {"prescription": ["B complex", "Omeprazole"]}
-    #   {"prescription": ["Omeprazole", "Enalapril"]}
-    #   {"prescription": ["Augmentin", "Fusigen"]}
-    #   {"prescription": ["Paracetamol"]}
-    #   {"prescription": ["Prednisone", "Augmentin"]}
-    #   {"prescription": ["Paracetamol", "Galocur"]}
-    #   {"prescription": ["Amoxicilline", "Metronidazole", "Omeprazole"]}
-    #   {"prescription": ["Augmentin", "Brupal"]}
+    # [
+    #     {
+    #         "raw_prescription": "Lisinopril 10mg q/j",
+    #         "medication": "Lisinopril"
+    #     },
+    #     {
+    #         "raw_prescription": "Amlodipine 10mg q/j",
+    #         "medication": "Amlodipine"
+    #     },
+    #     {
+    #         "raw_prescription": "Omeprazol 20mg BID",
+    #         "medication": "Omeprazole"
+    #     },
+    #     {
+    #         "raw_prescription": "Amoxicilline 500mg TID",
+    #         "medication": "Amoxicillin"
+    #     },
+    #     {
+    #         "raw_prescription": "Metronidazole 500mg TID",
+    #         "medication": "Metronidazole"
+    #     }
+    # ]}
     # 
     gpt_cleaned_prescriptions = []
 
-    for index, item in enumerate(completion.split('\n')):
-        
-        dossier = chunk[index]
-        record = {'id':dossier.id, 'prescription':dossier.clean_prescription, 'gpt_cleaned_prescription':json.loads(item)['prescription']}
-        print(record)
-        gpt_cleaned_prescriptions.append(json.dumps(record) + '\n')
+    for item in json.loads(completion):
+        record = from_json(GPTCleanedPrescription, json.dumps(item))
+        gpt_cleaned_prescriptions.append(record)
 
     save_gpt_cleaned_prescriptions(config.GPT_CLEANED_PRESCRIPTIONS_FILE, gpt_cleaned_prescriptions)

@@ -20,6 +20,15 @@ class GPTCleanedDiagnosis:
 @deserialize
 @serialize
 @dataclass
+class GPTCleanedPrescription:
+    patient_id: str
+    raw_prescription: str
+    medication: str
+
+
+@deserialize
+@serialize
+@dataclass
 class DiagnosisEmbedding:
     clean_field_diagnosis_english: str
     embedding: List[float]
@@ -91,5 +100,9 @@ def save_diagnosis_embedding(filename, embedding):
 
 
 def save_gpt_cleaned_prescriptions(filename, records):
+    # Serialize to json string & append newline
+    lines = []
+    for m in records:
+        lines.append(to_json(m) + '\n')
     # Save to Jsonl file
-    open(filename, 'a').writelines(records)
+    open(filename, 'a').writelines(lines)
