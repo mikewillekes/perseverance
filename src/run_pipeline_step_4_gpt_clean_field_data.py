@@ -15,17 +15,13 @@ llm = OpenAI(model_name='gpt-4',
              max_tokens=2500,
              openai_api_key=os.getenv("OPENAI_API_KEY"))
 
-
-from langchain.embeddings import OpenAIEmbeddings
-embed = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"), model='text-embedding-ada-002')
-
 #
 # Print out some summary stats about the previous pipeline stages
 #
 dossiers = load_dossiers(config.DOSSIERS_FILE)
 print(f'Dossiers: {len(dossiers)}')
 
-unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.diagnoses]))
+unique_diagnoses = list(set([d for dossier in dossiers for d in dossier.clean_diagnosis]))
 unique_diagnoses.sort()
 print(f'Unique Diagnoses: {len(unique_diagnoses)}')
 
