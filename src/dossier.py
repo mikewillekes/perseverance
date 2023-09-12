@@ -88,3 +88,8 @@ def save_diagnosis_embedding(filename, embedding):
     lines = [to_json(embedding) + '\n']
     # Save to Jsonl file
     open(filename, 'a').writelines(lines)
+
+
+def save_gpt_cleaned_prescriptions(filename, records):
+    # Save to Jsonl file
+    open(filename, 'a').writelines(records)
