@@ -106,3 +106,10 @@ def save_gpt_cleaned_prescriptions(filename, records):
         lines.append(to_json(m) + '\n')
     # Save to Jsonl file
     open(filename, 'a').writelines(lines)
+
+
+def load_gpt_cleaned_prescriptions(filename):
+    # Deserialized from Jsonl file
+    with open(filename, 'r') as fp:
+        for line in fp.readlines():
+            yield from_json(GPTCleanedPrescription, line.strip())
