@@ -42,7 +42,7 @@ def build_prompt(dossiers):
 # Iterate through the diagnosis list in chunks, using OpenAI to clean
 # and normalize each diagnosis
 #
-CHUNK_SIZE = 10
+CHUNK_SIZE = 8
 for i in range(0, len(dossiers), CHUNK_SIZE):
 
     time.sleep(0.05)
