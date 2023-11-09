@@ -24,7 +24,7 @@ df[columns.PRESCRIPTION_COL].fillna('', inplace=True)
 
 # Load the CSV file of manually corrected overrides
 manually_corrected_df = pd.read_csv(config.MANUALLY_CORRECTED_FILE)
-manually_corrected_df['new_raw_diagnosis'].fillna('', inplace=True)
+manually_corrected_df['MP_raw_diagnosis'].fillna('', inplace=True)
 
 def normalize_diagnosis(raw_diagnosis):
     # the input column may contain multiple entries separated
@@ -106,7 +106,7 @@ for index, row in df.iterrows():
             # there is a manual correction for this diagnosis;
             # clean the text using the same process as the raw incoming value,
             # and record it in the overrides list
-            override = matching_df.iloc[0]['new_raw_diagnosis']
+            override = matching_df.iloc[0]['MP_raw_diagnosis']
             if override:
                 dossier.manual_diagnosis_overrides.append(normalize_diagnosis(override)[0])
             else:
